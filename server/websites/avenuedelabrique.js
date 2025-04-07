@@ -4,29 +4,22 @@ const cheerio = require('cheerio');
 /**
  * Parse webpage data response
  * @param  {String} data - html response
- * @return {Object} deal
+ * @return {Object[]} deal list
  */
 const parse = data => {
-  const $ = cheerio.load(data, {'xmlMode': true});
+  const $ = cheerio.load(data);
 
   return $('div.prods a')
     .map((i, element) => {
-      const price = parseFloat(
-        $(element)
-          .find('span.prodl-prix span')
-          .text()
-      );
-
-      const discount = Math.abs(parseInt(
-        $(element)
-          .find('span.prodl-reduc')
-          .text()
-      ));
+      const priceText = $(element).find('span.prodl-prix span').text().trim().replace(',', '.');
+      const discountText = $(element).find('span.prodl-reduc').text().trim().replace('-', '').replace('%', '');
+      const href = $(element).attr('href');
 
       return {
-        discount,
-        price,
-        'title': $(element).attr('title'),
+        title: $(element).attr('title'),
+        price: parseFloat(priceText),
+        discount: parseInt(discountText),
+        link: href.startsWith('http') ? href : `https://www.avenuedelabrique.com${href}`
       };
     })
     .get();
@@ -35,18 +28,16 @@ const parse = data => {
 /**
  * Scrape a given url page
  * @param {String} url - url to parse
- * @returns 
+ * @returns {Promise<Object[]>}
  */
 module.exports.scrape = async url => {
   const response = await fetch(url);
 
   if (response.ok) {
     const body = await response.text();
-
     return parse(body);
   }
 
-  console.error(response);
-
-  return null;
+  console.error("Erreur lors de la requête :", response.status);
+  return [];
 };
