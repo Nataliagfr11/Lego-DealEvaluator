@@ -297,6 +297,7 @@ selectLegoSetIds.addEventListener('change', async (event) => {
 
   const priceStats = computePriceStatistics(prices);
   updatePriceIndicators(priceStats);
+  updateLifetimeValue(vintedSales);
 });
 
 
