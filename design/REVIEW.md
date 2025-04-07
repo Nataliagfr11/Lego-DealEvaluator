@@ -1,4 +1,5 @@
 # Design Review
+![IMG_4057](https://github.com/user-attachments/assets/2a730055-2eca-473c-9bca-612fcbe39f27)
 
 ## Low-fidelity sketches
 
