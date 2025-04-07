@@ -284,10 +284,19 @@ const renderVintedSales = (sales) => {
  */
 selectLegoSetIds.addEventListener('change', async (event) => {
   const selectedSetId = event.target.value; // Récupère l'ID du set sélectionné
-  console.log("🛒 Fetching Vinted sales for Set ID:", selectedSetId);
+  console.log("Fetching Vinted sales for Set ID:", selectedSetId);
 
   const vintedSales = await fetchVintedSales(selectedSetId);
   renderVintedSales(vintedSales);
+
+  updateNumberOfSales(vintedSales.length);
+
+  const prices = vintedSales
+  .map(sale => Number(sale.price))       
+  .filter(price => !isNaN(price));       
+
+  const priceStats = computePriceStatistics(prices);
+  updatePriceIndicators(priceStats);
 });
 
 
