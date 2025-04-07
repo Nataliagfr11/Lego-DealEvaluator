@@ -71,28 +71,44 @@ const fetchDeals = async (page = 1, size = 6) => {
  */
 const renderDeals = deals => {
   const fragment = document.createDocumentFragment();
-  const div = document.createElement('div');
   const template = deals
     .map(deal => {
-      const isFavorite = isDealFavorite(deal.id); // fonction définie plus bas
+      const isFavorite = isDealFavorite(deal.id);
+      const imageHtml = deal.photo
+        ? `<img src="${deal.photo}" alt="Image du set LEGO" class="deal-image">`
+        : `<div class="no-image">No image</div>`;
+
+      // Formatage de la date
+      const date = new Date(deal.published * 1000).toLocaleString("fr-FR");
+
       return `
-      <div class="deal" id="${deal.uuid}">
-        <span>${deal.id}</span>
-        <a href="${deal.link}" target="_blank">${deal.title}</a>
-        <span>${deal.price}</span>
-        <button onclick="toggleFavorite('${deal.id}')">
-          ${isFavorite ? '💛' : '🤍'}
-        </button>
-      </div>
+        <div class="deal-card" id="${deal.uuid}">
+          ${imageHtml}
+          <p><strong>${deal.id}</strong></p>
+          <a href="${deal.link}" target="_blank">${deal.title}</a>
+          <p><strong>${deal.price} €</strong></p>
+
+          <!-- Nouveaux éléments -->
+          <p>🔥 Discount: <strong>${deal.discount}%</strong></p>
+          <p>💬 Comments: <strong>${deal.comments ?? 0}</strong></p>
+          <p>🗓️ Published: <strong>${date}</strong></p>
+
+          <button onclick="toggleFavorite('${deal.id}')">
+            ${isFavorite ? '💛' : '🤍'}
+          </button>
+        </div>
       `;
     })
     .join('');
 
-  div.innerHTML = template;
-  fragment.appendChild(div);
-  sectionDeals.innerHTML = '<h2>Deals</h2>';
-  sectionDeals.appendChild(fragment);
+  sectionDeals.innerHTML = `
+    <h2>Deals</h2>
+    <div class="deal-grid">
+      ${template}
+    </div>
+  `;
 };
+
 
 
 /**

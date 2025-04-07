@@ -4,31 +4,189 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>🧱 Lego | Predictability of a lego set deal</title>
     <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f9f9f9;
+      }
+    
+      h1 {
+        background-color: #E3000B;
+        color: #FFD700;
+        padding: 20px;
+        margin: 0;
+        font-size: 2.5em;
+        text-align: center;
+        font-family: sans-serif;
+      }
+    
+      #options {
+        background-color: #0033A0;
+        padding: 15px;
+        color: #FFD700;
+        font-weight: bold;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+      }
+    
+      #options label,
+      #options select {
+        color: #FFD700;
+        font-weight: bold;
+        margin-right: 10px;
+      }
+    
       #filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+      }
+    
+      #filters span {
+        background-color: #FFD700;
+        color: #0033A0;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        font-weight: bold;
+      }
+    
+      #filters span:hover {
+        background-color: #fff500;
+      }
+    
+      #filters span.active {
+        background-color: #fff500;
+        font-weight: bold;
+      }
+    
+      #indicators, #lego, #vinted-sales {
+        margin: 20px auto;
+        max-width: 900px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      }
+    
+      #deals {
+      margin: 20px auto;
+      max-width: 100%;
+      }
+
+    
+      .deal {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      }
+    
+      .deal img {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+    
+      .deal a {
+        color: #0033A0;
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+        text-decoration: none;
+      }
+    
+      .deal button {
+        border: none;
+        background: none;
+        font-size: 1.3em;
+        cursor: pointer;
         margin-top: 10px;
       }
 
-      #filters span {
-        display: inline-block;
-        margin-right: 15px;
-        padding: 6px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+      .deal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
       }
 
-      #filters span:hover {
-        background-color: #f0f0f0;
+      .deal-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
       }
 
-      #filters span.active {
-        background-color: #ffe08a;
-        font-weight: bold;
+      .deal-card:hover {
+      transform: scale(1.02);
       }
+
+      .deal-image {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      }
+
+      .no-image {
+      width: 100%;
+      height: 180px;
+      background-color: #eee;
+      color: #888;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-style: italic;
+      }
+
+      #content-wrapper {
+      display: flex;
+      gap: 30px;
+      padding: 20px;
+      }
+
+      #deals-column {
+      flex: 2;
+      }
+
+      #vinted-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      }
+
+      #vinted-column section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #welcome-text {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #333;
+      font-style: italic;
+      }
+
     </style>
+    
   </head>
   <body>
     <h1>Lego</h1>
+    <p id="welcome-text">Welcome! Find the best Lego set deals right here. </p>       
     <section id="options">
       <div id="show">
         <label for="show-select">Show:</label>
@@ -60,52 +218,60 @@
       </div>
     </section>
 
-    <section id="indicators">
-      <h2>Indicators</h2>
-      <div>
-        <span>Number of deals</span>
-        <span id="nbDeals">0</span>
-      </div>
-      <div>
-        <span>Number of sales</span>
-        <span id="nbSales">0</span>
-      </div>
-      <div>
-        <span>Lifetime value</span>
-        <span id="lifetime">0 days</span>
-      </div>      
-      <div>
-        <span>Average price</span>
-        <span id="avgPrice">0</span>
-      </div>
-      <div>
-        <span>p5 sales price value</span>
-        <span id="p5Price">0</span>
-      </div>
-      <div>
-        <span>p25 sales price value</span>
-        <span id="p25Price">0</span>
-      </div>
-      <div>
-        <span>p50 sales price value</span>
-        <span id="p50Price">0</span>
-      </div>      
-    </section>
-
-    <section id="deals"></section>
-
-    <section id="lego">
-      <h2>Lego sets</h2>
-      <div>
-        <label>Lego set id:</label>
-        <select id="lego-set-id-select"></select>
-      </div>
-    </section>
-
-    <section id="vinted-sales">
-      <h2>Vinted Sales</h2>
-      <p>Select a Lego Set to see available sales on Vinted.</p>
-    </section>    
+    
+    <div id="content-wrapper">
+      <!-- Colonne gauche -->
+      <section id="deals-column">
+        <section id="deals"></section>
+      </section>
+    
+      <!-- Colonne droite -->
+      <section id="vinted-column">
+        <section id="indicators">
+          <h2>Indicators</h2>
+          <div>
+            <span>Number of deals</span>
+            <span id="nbDeals">0</span>
+          </div>
+          <div>
+            <span>Number of sales</span>
+            <span id="nbSales">0</span>
+          </div>
+          <div>
+            <span>Lifetime value</span>
+            <span id="lifetime">0 days</span>
+          </div>      
+          <div>
+            <span>Average price</span>
+            <span id="avgPrice">0</span>
+          </div>
+          <div>
+            <span>p5 sales price value</span>
+            <span id="p5Price">0</span>
+          </div>
+          <div>
+            <span>p25 sales price value</span>
+            <span id="p25Price">0</span>
+          </div>
+          <div>
+            <span>p50 sales price value</span>
+            <span id="p50Price">0</span>
+          </div>      
+        </section>
+    
+        <section id="lego">
+          <h2>Lego sets</h2>
+          <label>Lego set id:</label>
+          <select id="lego-set-id-select"></select>
+        </section>
+    
+        <section id="vinted-sales">
+          <h2>Vinted Sales</h2>
+          <p>Select a Lego Set to see available sales on Vinted.</p>
+        </section>
+      </section>
+    </div>
+    
 
     <!-- Les scripts doivent rester en fin de <body> -->
     <script type="text/javascript" charset="UTF-8" src="utils.js"></script>
