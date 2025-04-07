@@ -3,6 +3,29 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>🧱 Lego | Predictability of a lego set deal</title>
+    <style>
+      #filters {
+        margin-top: 10px;
+      }
+
+      #filters span {
+        display: inline-block;
+        margin-right: 15px;
+        padding: 6px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      #filters span:hover {
+        background-color: #f0f0f0;
+      }
+
+      #filters span.active {
+        background-color: #ffe08a;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
     <h1>Lego</h1>
@@ -23,6 +46,7 @@
         <span>By best discount</span>
         <span>By most commented</span>
         <span>By hot deals</span>
+        <span id="filter-favorite">By favorite</span>
         <span id="reset-filters">Reset Filters</span>
       </div>
       <div id="sort">

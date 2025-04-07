@@ -74,11 +74,15 @@ const renderDeals = deals => {
   const div = document.createElement('div');
   const template = deals
     .map(deal => {
+      const isFavorite = isDealFavorite(deal.id); // fonction définie plus bas
       return `
       <div class="deal" id="${deal.uuid}">
         <span>${deal.id}</span>
         <a href="${deal.link}" target="_blank">${deal.title}</a>
         <span>${deal.price}</span>
+        <button onclick="toggleFavorite('${deal.id}')">
+          ${isFavorite ? '💛' : '🤍'}
+        </button>
       </div>
       `;
     })
@@ -89,6 +93,7 @@ const renderDeals = deals => {
   sectionDeals.innerHTML = '<h2>Deals</h2>';
   sectionDeals.appendChild(fragment);
 };
+
 
 /**
  * Render page selector
@@ -180,6 +185,16 @@ document.querySelector('#filters span:nth-child(1)').addEventListener('click', (
   const filteredDeals = currentDeals.filter(deal => deal.discount >= 50);
   render(filteredDeals, currentPagination);
 });
+
+/**
+ * Filter deals by favorite
+ */
+document.querySelector('#filter-favorite').addEventListener('click', () => {
+  const favorites = getFavoriteDeals(); // Récupère les IDs favoris
+  const favoriteDeals = currentDeals.filter(deal => favorites.includes(deal.id));
+  render(favoriteDeals, currentPagination); // Rend uniquement les favoris
+});
+
 
 /**
  * Reset filters
@@ -368,3 +383,34 @@ const updateNumberOfSales = (numberOfSales) => {
   const salesIndicator = document.querySelector('#nbSales');
   salesIndicator.textContent = numberOfSales;
 };
+
+
+/**
+ * Gérer les favoris dans le local storage
+ */
+const getFavoriteDeals = () => {
+  return JSON.parse(localStorage.getItem('favorites')) || [];
+};
+
+const saveFavoriteDeals = (favorites) => {
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+};
+
+const isDealFavorite = (dealId) => {
+  const favorites = getFavoriteDeals();
+  return favorites.includes(dealId);
+};
+
+const toggleFavorite = (dealId) => {
+  let favorites = getFavoriteDeals();
+  if (favorites.includes(dealId)) {
+    favorites = favorites.filter(id => id !== dealId);
+  } else {
+    favorites.push(dealId);
+  }
+  saveFavoriteDeals(favorites);
+
+  // Recharge l'affichage avec les favoris mis à jour
+  render(currentDeals, currentPagination);
+};
+
