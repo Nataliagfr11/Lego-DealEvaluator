@@ -46,22 +46,44 @@ const setCurrentDeals = ({result, meta}) => {
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
+//const fetchDeals = async (page = 1, size = 6) => {
+  //try {
+    //const response = await fetch(
+      //`https://lego-api-blue.vercel.app/deals?page=${page}&size=${size}`
+    //);
+    //const body = await response.json();
+
+    //if (body.success !== true) {
+     // console.error("Deals API error:", body);
+      //return {currentDeals, currentPagination};
+    //}
+
+    //return body.data; // { result: [...], meta: {...} }
+  //} catch (error) {
+    //console.error("Deals API fetch error:", error);
+    //return {currentDeals, currentPagination};
+  //}
+//};
+
 const fetchDeals = async (page = 1, size = 6) => {
   try {
     const response = await fetch(
-      `https://lego-api-blue.vercel.app/deals?page=${page}&size=${size}`
+      `https://server-rho-weld-18.vercel.app/deals/search?page=${page}&limit=${size}`
     );
     const body = await response.json();
 
-    if (body.success !== true) {
-      console.error("Deals API error:", body);
-      return {currentDeals, currentPagination};
-    }
+    // On construit l'objet attendu pour le front (result + meta)
+    const result = body.results || [];
+    const meta = {
+      count: body.total || 0,
+      currentPage: body.page || 1,
+      pageCount: Math.ceil((body.total || 1) / size)
+    };
 
-    return body.data; // { result: [...], meta: {...} }
+    return { result, meta };
   } catch (error) {
     console.error("Deals API fetch error:", error);
-    return {currentDeals, currentPagination};
+    return { result: [], meta: {} };
   }
 };
 
@@ -69,37 +91,29 @@ const fetchDeals = async (page = 1, size = 6) => {
  * Render list of deals
  * @param  {Array} deals
  */
-const renderDeals = deals => {
+const renderDeals = (deals) => {
   const fragment = document.createDocumentFragment();
-  const template = deals
-    .map(deal => {
-      const isFavorite = isDealFavorite(deal.id);
-      const imageHtml = deal.photo
-        ? `<img src="${deal.photo}" alt="Image du set LEGO" class="deal-image">`
-        : `<div class="no-image">No image</div>`;
+  const template = deals.map(deal => {
+    const isFavorite = isDealFavorite(deal.legoId);
+    const imageHtml = deal.image
+      ? `<img src="${deal.image}" alt="Image du set LEGO" class="deal-image">`
+      : `<div class="no-image">No image</div>`;
 
-      // Formatage de la date
-      const date = new Date(deal.published * 1000).toLocaleString("fr-FR");
-
-      return `
-        <div class="deal-card" id="${deal.uuid}">
-          ${imageHtml}
-          <p><strong>${deal.id}</strong></p>
-          <a href="${deal.link}" target="_blank">${deal.title}</a>
-          <p><strong>${deal.price} €</strong></p>
-
-          <!-- Nouveaux éléments -->
-          <p>🔥 Discount: <strong>${deal.discount}%</strong></p>
-          <p>💬 Comments: <strong>${deal.comments ?? 0}</strong></p>
-          <p>🗓️ Published: <strong>${date}</strong></p>
-
-          <button onclick="toggleFavorite('${deal.id}')">
-            ${isFavorite ? '💛' : '🤍'}
-          </button>
-        </div>
-      `;
-    })
-    .join('');
+    return `
+      <div class="deal-card" id="${deal.legoId}">
+        ${imageHtml}
+        <p><strong>${deal.legoId}</strong></p>
+        <a href="${deal.link}" target="_blank">${deal.title}</a>
+        <p><strong>${deal.price} €</strong></p>
+        <p>🔥 Discount: <strong>${deal.discount}%</strong></p>
+        <p>💬 Comments: <strong>${deal.nb_comments ?? 0}</strong></p>
+        <p>🗓️ Published: <strong>${deal.post_date}</strong></p>
+        <button onclick="toggleFavorite('${deal.legoId}')">
+          ${isFavorite ? '💛' : '🤍'}
+        </button>
+      </div>
+    `;
+  }).join('');
 
   sectionDeals.innerHTML = `
     <h2>Deals</h2>
@@ -207,7 +221,7 @@ document.querySelector('#filters span:nth-child(1)').addEventListener('click', (
  */
 document.querySelector('#filter-favorite').addEventListener('click', () => {
   const favorites = getFavoriteDeals(); // Récupère les IDs favoris
-  const favoriteDeals = currentDeals.filter(deal => favorites.includes(deal.id));
+  const favoriteDeals = currentDeals.filter(deal => favorites.includes(deal.legoId));
   render(favoriteDeals, currentPagination); // Rend uniquement les favoris
 });
 
@@ -228,7 +242,7 @@ document.querySelector('#reset-filters').addEventListener('click', async () => {
  */
 document.querySelector('#filters span:nth-child(2)').addEventListener('click', () => {
   const filteredDeals = currentDeals.filter(deal =>
-    deal.comments !== undefined && !isNaN(deal.comments) && deal.comments > 5
+    deal.nb_comments !== undefined && !isNaN(deal.nb_comments) && deal.nb_comments > 5
   );
   render(filteredDeals, currentPagination);
 });
@@ -272,20 +286,28 @@ document.querySelector('#sort-select').addEventListener('change', (event) => {
  */
 const fetchVintedSales = async (setId) => {
   try {
-    const response = await fetch(`https://lego-api-blue.vercel.app/sales?id=${setId}`);
+    const response = await fetch(
+      `https://server-rho-weld-18.vercel.app/sales/search?legoSetId=${setId}`
+    );
     const body = await response.json();
 
-    if (body.success !== true || !body.data.result || body.data.result.length === 0) {
-      console.warn("No sales found for Lego Set ID:", setId);
+    if (!Array.isArray(body.results)) {
+      console.warn("Format inattendu pour les ventes Vinted");
       return [];
     }
 
-    return body.data.result; // Retourne la liste des ventes
+    return body.results.map(sale => ({
+      title: sale.title,
+      price: parseFloat(sale.price?.amount || 0),
+      published: parsePublishedTime(sale.published_time),
+      link: sale.url
+    }));
   } catch (error) {
-    console.error("Error fetching Vinted sales:", error);
+    console.error("Erreur Vinted sales:", error);
     return [];
   }
 };
+
 
 /**
  * Render Vinted sales in the page
@@ -377,7 +399,10 @@ const updateLifetimeValue = (sales) => {
 
   // Convertir les dates "Thu, 16 Jan 2025 20:47:58 GMT" en timestamp
   const timestamps = sales
-    .map(sale => Date.parse(sale.published))
+  .map(sale => {
+    const d = parsePublishedTime(sale.published);
+    return d ? d.getTime() : NaN;
+  })  
     .filter(ts => !isNaN(ts))
     .sort((a, b) => a - b);
 
@@ -391,6 +416,16 @@ const updateLifetimeValue = (sales) => {
   const days = Math.max(1, Math.round((last - first) / (1000 * 60 * 60 * 24)));
   document.querySelector('#lifetime').textContent = `${days} days`;
 };
+
+const parsePublishedTime = (str) => {
+  if (!str || typeof str !== 'string') return null;
+  const [datePart, timePart] = str.split(' ');
+  const [day, month, year] = datePart.split('/');
+  const isoString = `${year}-${month}-${day}T${timePart}`;
+  const date = new Date(isoString);
+  return isNaN(date.getTime()) ? null : date;
+};
+
 
 /**
  * Update the number of sales

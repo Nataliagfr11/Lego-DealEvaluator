@@ -229,14 +229,14 @@ app.get('/sales/indicators', async (req, res) => {
 // --------------------
 // Démarrage du serveur
 // --------------------
-initMongo().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Serveur disponible sur http://localhost:${PORT}`);
-  });
-}).catch(err => {
-  console.error('Échec de la connexion MongoDB', err);
-  process.exit(1);
-});
+//initMongo().then(() => {
+  //app.listen(PORT, () => {
+    //console.log(`Serveur disponible sur http://localhost:${PORT}`);
+  //});
+//}).catch(err => {
+  //console.error('Échec de la connexion MongoDB', err);
+  //process.exit(1);
+//});
 
 // --------------------
 // Fermeture propre
@@ -245,3 +245,12 @@ process.on('SIGINT', async () => {
   await shutdownMongo();
   process.exit(0);
 });
+
+// Ajoute à la fin du fichier
+module.exports = async (req, res) => {
+  if (!db) {
+    await initMongo();
+  }
+  return app(req, res);
+};
+
