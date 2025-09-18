@@ -1,3 +1,62 @@
+# 🧱 Lego-DealEvaluator
+
+Welcome to **Lego-DealEvaluator**!  
+This repository contains a web application designed to analyze LEGO set deals and determine whether a given offer is really profitable.  
+The project was carried out as part of my coursework, and combines **front-end design, web scraping, API consumption, and deployment**.
+
+---
+
+## 📋 Project Overview
+The main goal of this project is to build an **end-to-end application** that helps users evaluate LEGO deals in real time.  
+It integrates several components:
+
+- 🧱 **Manipulate LEGO deals** directly in the browser  
+- 🧹 **Scrape online sales** (from Vinted) and fetch deals through APIs  
+- 📱 **Render results** interactively in the browser  
+- 💽 **Save data in a database** to avoid redundant scraping  
+- ⤵️ **Provide access via an API** for querying deals and sales  
+- 🚀 **Deploy online with Vercel** to make the app accessible to anyone  
+
+---
+
+## 🌟 Key Features
+- Interactive filters (by discount, comments, hot deals, favorites, etc.)  
+- Deal visualization with prices, discounts, publication dates, and comments  
+- Integration of **Vinted sales data** for real-world LEGO set offers  
+- Dynamic indicators (number of deals, sales, average price, percentiles, lifetime value)  
+- Ability to **favorite deals** and sort by different criteria  
+- Modern, responsive design with HTML/CSS/JS  
+
+---
+
+## 📸 Screenshots  
+ 
+
+---
+
+## 🛠️ Technologies & Libraries
+- **Front-end**: HTML, CSS, JavaScript  
+- **Back-end / API**: Node.js, Express  
+- **Database**: MongoDB  
+- **Scraping**: Fetch / API integration  
+- **Deployment**: Vercel  
+
+---
+
+## 📁 Project Structure
+- `/client` → Front-end (HTML, CSS, JS)  
+- `/server` → API and data management  
+- `/workshops` → Step-by-step workshops from the course  
+- `/design` → UI and design elements  
+- `/slides` → Project explanations and course material  
+
+---
+
+## 📝 Licence
+This project was initially forked from my professor’s repository, and extended with my own work.
+
+---
+
 # 🧱 Lego
 
 > First bricks for profitability
