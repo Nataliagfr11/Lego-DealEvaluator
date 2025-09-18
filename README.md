@@ -32,10 +32,10 @@ It integrates several components:
 ## 📸 Screenshots  
 
  **Main interface – LEGO deals and indicators**  
-![Lego Deals](images/ImageWebApplicationLego.png)  
+![Lego Deals](ImageWebApplicationLego.png)  
 
 **Example of fetched Vinted sales**  
-![Vinted Sales](images/Image2WebApplicationLego.png) 
+![Vinted Sales](Image2WebApplicationLego.png) 
 
 ---
 
