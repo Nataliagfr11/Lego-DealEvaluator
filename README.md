@@ -31,7 +31,7 @@ It integrates several components:
 
 ## 📸 Screenshots  
 
- **Main interface – LEGO deals and indicators**  
+ **Main interface of my deployed app – LEGO deals and indicators**  
 ![Lego Deals](ImageWebApplicationLego.png)  
 
 **Example of fetched Vinted sales**  
