@@ -22,10 +22,10 @@ It integrates several components:
 ## 🌟 Key Features
 - Interactive filters (by discount, comments, hot deals, favorites, etc.)  
 - Deal visualization with prices, discounts, publication dates, and comments  
-- Integration of **Vinted sales data** for real-world LEGO set offers  
+- Integration of Vinted sales data for real-world LEGO set offers  
 - Dynamic indicators (number of deals, sales, average price, percentiles, lifetime value)  
-- Ability to **favorite deals** and sort by different criteria  
-- Modern, responsive design with HTML/CSS/JS  
+- Ability to favorite deals and sort by different criteria  
+- Design with HTML/CSS/JS  
 
 ---
 
